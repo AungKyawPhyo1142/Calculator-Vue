@@ -6,12 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator in Vue</title>
+
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
     <!-- MDB -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/5.0.0/mdb.min.css" rel="stylesheet" />
+
 </head>
 
 <body>
@@ -24,17 +26,17 @@
                 <div class="card" style="background-color: #1c2353;">
                     <div class="card-body">
                         <div class="border text-white bg-dark rounded p-3 mb-2 d-flex justify-content-end align-items-center">
-                            <span class="fs-4">0</span>
+                            <span class="fs-5">{{userInput.result}}</span>
                         </div>
                         <div class="row">
                             <div class="form-group col-6 mt-3 mb-3">
-                                <input type="text" name="" id="" class="form-control" placeholder="Enter first number">
+                                <input type="text" name="" id="" class="form-control" placeholder="Enter first number" v-model="userInput.firstNumber">
                             </div>
                             <div class="form-group col-6 mt-3 mb-3">
-                                <input type="text" name="" id="" class="form-control" placeholder="Enter second number">
+                                <input type="text" name="" id="" class="form-control" placeholder="Enter second number" v-model="userInput.secondNumber">
                             </div>
-                            <div class="col-4">
-                                <select name="" class="form-control" id="">
+                            <div class="col-5 mb-3">
+                                <select name="" class="form-control" id="" v-model="userInput.operators">
                                     <option value="">Operations</option>
                                     <option value="+">+</option>
                                     <option value="-">-</option>
@@ -44,13 +46,13 @@
                                 </select>
                             </div>
                             <div class="col">
-                                <button class="w-100 btn btn-primary">Calculate</button>
+                                <button @click="calculate()" class="w-100 btn btn-primary">Calculate</button>
                             </div>
                             <div class="col">
-                                <button class="w-100 btn btn-danger">Clear</button>
+                                <button @click="clearScreen()" class="w-100 btn btn-danger">Clear</button>
                             </div>
                             <div class="d-flex justify-content-center">
-                                <button class="btn btn-warning mt-3 w-100">Save</button>
+                                <button @click="save()" class="btn btn-warning mt-3 w-100">Save</button>
                             </div>
                         </div>
                     </div>
@@ -70,10 +72,71 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script>
     let app = new Vue({
+
         el: '.app',
+
         data: {
+            userInput: {
+                firstNumber: 0,
+                secondNumber: 0,
+                operators: '',
+                result: 0
+            }
+        },
+
+        methods: {
+
+            calculate() {
+
+                let firstNum = parseInt(this.userInput.firstNumber);
+                let secondNum = parseInt(this.userInput.secondNumber);
+                let operator = this.userInput.operators;
+                let result;
+
+                switch (operator) {
+
+                    case '+':
+                        result = firstNum + secondNum;
+                        break;
+                    case '-':
+                        result = firstNum - secondNum;
+                        break;
+                    case '*':
+                        result = firstNum * secondNum;
+                        break;
+                    case '/':
+                        result = firstNum / secondNum;
+                        break;
+                    case '%':
+                        result = firstNum % secondNum;
+                        break;
+                    default:
+                        result = 'Error!'
+                        break;
+
+                }
+
+                if (result != 'Error!') {
+                    this.userInput.result = `${this.userInput.firstNumber} ${this.userInput.operators} ${this.userInput.secondNumber} = ${result}`;
+                } else {
+                    this.userInput.result = result;
+                }
+
+            },
+
+            clearScreen() {
+                this.userInput.firstNumber = 0;
+                this.userInput.secondNumber = 0;
+                this.userInput.result = 0;
+                this.userInput.operators = '';
+            },
+
+            save() {
+
+            }
 
         }
+
     })
 </script>
 
