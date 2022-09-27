@@ -26,7 +26,7 @@
                 <div class="card" style="background-color: #1c2353;">
                     <div class="card-body">
                         <div class="border text-white bg-dark rounded p-3 mb-2 d-flex justify-content-end align-items-center">
-                            <span class="fs-5">{{userInput.result}}</span>
+                            <span class="fs-5">{{result}}</span>
                         </div>
                         <div class="row">
                             <div class="form-group col-6 mt-3 mb-3">
@@ -58,8 +58,8 @@
                     </div>
                     <div class="card-footer">
                         <h3 class="text-white">History</h3>
-                        <div class="text-muted">
-                            Records...
+                        <div class="text-muted" v-for="history in histories">
+                            {{history}}
                         </div>
                     </div>
                 </div>
@@ -76,12 +76,15 @@
         el: '.app',
 
         data: {
+            result: 0,
             userInput: {
                 firstNumber: 0,
                 secondNumber: 0,
-                operators: '',
-                result: 0
-            }
+                operators: ''
+            },
+            histories: [],
+            tempResult: 0,
+            saveStatus: false
         },
 
         methods: {
@@ -117,21 +120,37 @@
                 }
 
                 if (result != 'Error!') {
-                    this.userInput.result = `${this.userInput.firstNumber} ${this.userInput.operators} ${this.userInput.secondNumber} = ${result}`;
+                    this.result = `${this.userInput.firstNumber} ${this.userInput.operators} ${this.userInput.secondNumber} = ${result}`;
+                    this.saveStatus = true;
                 } else {
-                    this.userInput.result = result;
+                    this.result = result;
                 }
 
+                this.userInput.firstNumber = 0;
+                this.userInput.secondNumber = 0;
+                this.userInput.operators = '';
             },
 
             clearScreen() {
+                this.tempResult = this.result;
                 this.userInput.firstNumber = 0;
                 this.userInput.secondNumber = 0;
-                this.userInput.result = 0;
+                this.result = 0;
                 this.userInput.operators = '';
             },
 
             save() {
+
+                if (this.saveStatus) {
+                    if (this.result != '0') {
+                        this.histories.push(this.result);
+                    } else {
+                        this.histories.push(this.tempResult);
+                    }
+                    this.result = 0;
+                    this.tempResult = 0;
+                }
+
 
             }
 
